@@ -1,0 +1,123 @@
+<!-- Meyer Luca, Girardin Jarod, Boegli Lenny, Muller Léon -->
+<!-- Version 18/06 -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<script src="https://cdn.jsdelivr.net/npm/p5@1.3.1/lib/p5.min.js"></script>
+
+		<title>AN21_MiniProjet_EquipeB4</title>
+	</head>
+	<body>
+		<h4>18 June 2021</h4>
+		<h1>Mini projet : 2D Ray casting</h1>
+		<h3>Meyer Luca, Girardin Jarod, Boegli Lenny, Muller Léon</h3>
+		
+		Tips : 
+		<ul>
+			<li>Les rayons partent de la position de la souris, vous pouvez donc les déplacer à volonté.</li>
+			<li>En effectuant un clic gauche, les rayons tournent dans le sens horaire.</li>
+			<li>En effectuant un clic, droit les rayons tournent dans le sens anti-horaire.</li>
+			<li>Vous pouvez faire varier le nombre de rayons en modifiant la valeur du slider.</li>
+			<li>En cochant la checkbox, la rotation a une vitesse qui s'accélère lorsque l'on garde le clic enfoncé. Sinon, la rotation se fait de façon linéaire.</li>
+			<li><strong>Ne pas faire clic droit et gauche en même temps, auquel cas la rotation restera bloquée.</strong></li>
+		</ul>
+		
+		<input
+			type="range"
+			min="1"
+			max="200"
+			value="50"
+			id="slider"
+			onchange="changeNbRays();"
+		/>
+		<div id="slider_value"></div>
+		
+		<p>
+			<input type="checkbox" id="cbx_shouldSpeedUp" name="cbx">
+			<label for="cbx">La rotation s'accélère</label>
+		</p>
+
+		<div id="canvas"></div>
+		<script src="ray.js"></script>
+		<script src="boundary.js"></script>
+		<script src="particle.js"></script>
+		<script src="sketch.js"></script>
+
+		<p>
+			<h2>Mini Rapport</h2>
+
+			<h3>Contextualisation</h3>
+			<p>
+				Le but du mini-projet est de simuler des effets naturels grâce aux mathématiques et algorithmies.<br>
+				Nous avons de ce fait choisit de simuler des rayons de lumières pouvant être envoyés depuis une source de lumière. Ces rayons peuvent être bloqués par les murs, réfléchis par un miroir, ou réfractés lorsqu'ils traversent un milieu différent (eau, ruby).
+			</p>
+
+			<h3>Méthodologie de développement</h2>
+				
+			<h4>Terminologie</h4>
+			<ul>
+				<li><strong>Particule</strong> : placée à la position de la souris et génère des rayons premiers, elle est représentée par un cercle blanc.</li>
+				<li><strong>Rayons premiers</strong> : rayons partant depuis la particule, représentés en blanc cassé.</li>
+				<li><strong>Durée de vie d'un rayon</strong> : nombre de rebonds maximum qu'un rayon peut faire avant de disparaître</li>
+				<br/>
+				<li><strong>Murs</strong> : traits noir arrêtant les rayons.</li>
+				<li><strong>Miroirs</strong> : traits blancs reflétant les rayons, les rayons ainsi réfléchis prennent la couleur verte.</li>
+				<li><strong>Milieu</strong> : composé de 4 murs de couleur réfractant les rayons (grâce à un indice de réfraction) mais ne les réflechissent pas. Les rayons réfractés prennent la couleur du milieu.</li>
+				<ul>
+					<li><strong>Eau</strong> milieu bleu, d'indice de réfraction de 1.33.</li>
+					<li><strong>Rubis</strong> milieu rouge, d'indice de réfraction de 1.76.</li>
+				</ul>
+			</ul>
+			<p>
+				De base, le milieu dans lequel la particule se trouve est le vide d'indice 1.<br>
+				La durée de vie d'un rayon est de 10.
+			</p>
+
+			<h4>Envoi de rayons vers les murs</h4>
+			<p>
+				Les rayons premiers partent dans toutes les directions avant d'atteindre un mur.<br>
+				Pour ce faire, on calcule la position de l'intersection entre le rayon et tous les murs sur son chemin, et on ne garde que le mur possédant l'intersection la plus proche. On dessine donc un trait entre la particule et le mur rencontré.
+			</p>
+			
+			<h4>Réflection depuis un miroir</h4>
+			<p>
+				Si le mur calculé le plus proche est un miroir, le rayon est réfléchi. <br>
+				On peut voir sur l'image ci-dessous le fonctionnement d'une réflection.
+			</p>
+			<img src="reflection.png" alt="réflection" width="400">
+			
+			<h4>Réfraction en passant à travers un milieu</h4>
+			<p>
+				Si le mur calculé le plus proche est un bord d'un milieu, le rayon est réfracté en fonction de l'indice de réfraction (si il n'est pas réfléchis car l'angle est trop important). <br>
+				On peut voir sur l'image ci-dessous le fonctionnement d'une réfraction.
+			</p>			
+			<img src="refraction.jpg" alt="réfraction" width="400">
+			
+			<h3>Conclusion et perspective</h3>
+			<p>
+				Nous avons donc implémenter la génération de rayon à partir d'une particule, la réflexion des rayons, ainsi que la réfraction de ceux-ci entre un milieu et le vide.<br>
+				<br>
+				Les perspectives d'amélioration seraient d'implémenter la diffraction aux bords des différents murs et/ou dans des ouvertures sur les murs.<br>
+				Dans un second temps, il serait envisageable d'implémenter la décomposition de la lumière lors de la réfraction en prenant en compte également les longueurs d'onde des composants des rayons, et du coup permettre de faire un effet d'arc-en-ciel avec un prisme par exemple.
+			</p>
+
+			<h3>Références</h3>
+			<ul>
+				<li><a href="https://fr.wikipedia.org/wiki/Réflexion_(optique)">Wikipédia reflection</a></li>
+				<li><a href="https://fr.wikipedia.org/wiki/Réfraction">Wikipédia refraction</a></li>
+				<li><a href="https://en.wikipedia.org/wiki/Line–line_intersection">Wikipédia line intersection</a></li>
+				<li><a href="https://github.com/CodingTrain/website/tree/main/CodingChallenges/CC_145_Ray_Casting/P5">Ray casting github</a></li>
+			</ul>
+
+			<h3>Sources</h3>
+			<ul>
+				<li><a href="https://upload.wikimedia.org/wikipedia/commons/9/91/Reflexion_fr.png">image réflection</a></li>
+				<li><a href="https://www.geowiki.fr/images/8/8f/Réfraction.jpg">image réfraction</a></li>
+			</ul>
+		</p>
+	</body>
+</html>
